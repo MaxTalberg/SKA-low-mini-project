@@ -3,7 +3,7 @@ import pandas as ps
 import matplotlib.pyplot as plt
 import numpy as np
 from harp_beam import compute_EEPs
-
+from functions import to_dBV
 from plots import plot2
 
 ## Q 2. plot all the 256 EEPs and their average (AEP)
@@ -11,27 +11,8 @@ num_dir = 256
 theta = np.linspace(-np.pi/2, np.pi/2, num_dir)
 phi = np.zeros_like(theta)
 
-# Print the current working directory
-print("Current Working Directory:", os.getcwd())
-
 #EEPs
 v_theta_polY, v_phi_polY, v_theta_polX, v_phi_polX = compute_EEPs(theta.copy()[:, None], phi.copy()[:, None])
-
-# conver to dBV
-
-def to_dBV(magnitude):
-    '''
-    Convert magnitude to dBV
-    -------------------------
-    magnitude: float
-        Magnitude of EEPs
-
-    Returns
-    -------
-    float
-        Magnitude in dBV
-    '''
-    return 20*np.log10(magnitude)
 
 # Calculate magnitude of EEPs in dBV
 magnitude_EEP_polY = to_dBV(np.abs(v_theta_polY))
