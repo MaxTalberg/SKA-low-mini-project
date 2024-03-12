@@ -11,8 +11,6 @@ num_dir = 256
 theta = np.linspace(-np.pi/2, np.pi/2, num_dir)
 phi = np.zeros_like(theta)
 
-import os
-
 # Print the current working directory
 print("Current Working Directory:", os.getcwd())
 
@@ -22,6 +20,17 @@ v_theta_polY, v_phi_polY, v_theta_polX, v_phi_polX = compute_EEPs(theta.copy()[:
 # conver to dBV
 
 def to_dBV(magnitude):
+    '''
+    Convert magnitude to dBV
+    -------------------------
+    magnitude: float
+        Magnitude of EEPs
+
+    Returns
+    -------
+    float
+        Magnitude in dBV
+    '''
     return 20*np.log10(magnitude)
 
 # Calculate magnitude of EEPs in dBV
