@@ -15,6 +15,7 @@ def to_dBV(magnitude):
     '''
     return 20*np.log10(magnitude)
 
+
 # StEFCal algorithm
 def stefcal(M, R, max_iteration=100, threshold=1e-6):
     # Initial gain matrix G
