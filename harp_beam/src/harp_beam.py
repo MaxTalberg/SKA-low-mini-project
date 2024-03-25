@@ -200,8 +200,8 @@ def power_EEPs(v_theta_polY, v_phi_polY, v_theta_polX, v_phi_polX):
     EEPs_phi_polX = np.abs(v_phi_polX)
 
     # Calculate EEPs
-    EEPs_polY = EEPs_theta_polY**2 + EEPs_phi_polY**2
-    EEPs_polX = EEPs_theta_polX**2 + EEPs_phi_polX**2
+    EEPs_polY = np.sqrt(EEPs_theta_polY**2 + EEPs_phi_polY**2)
+    EEPs_polX = np.sqrt(EEPs_theta_polX**2 + EEPs_phi_polX**2)
 
     # Calculate AEPs
     AEP_polY = np.mean(EEPs_polY, axis=1)
@@ -288,10 +288,10 @@ def compute_beamforming(G, v_theta_polY, v_phi_polY, v_theta_polX, v_phi_polX, p
     
     AP_theta_polY = np.abs(beamforming(G, v_theta_polY, pos_ant, theta, phi, theta0, phi0))
     AP_phi_polY = np.abs(beamforming(G, v_phi_polY, pos_ant, theta, phi, theta0, phi0))
-    AP_polY = to_dBV(AP_theta_polY**2 + AP_phi_polY**2)
+    AP_polY = to_dBV(np.sqrt(AP_theta_polY**2 + AP_phi_polY**2))
 
     AP_theta_polX = np.abs(beamforming(G, v_theta_polX, pos_ant, theta, phi, theta0, phi0))
     AP_phi_polX = np.abs(beamforming(G, v_phi_polX, pos_ant, theta, phi, theta0, phi0))
-    AP_polX = to_dBV(AP_theta_polX**2 + AP_phi_polX**2)
+    AP_polX = to_dBV(np.sqrt(AP_theta_polX**2 + AP_phi_polX**2))
 
     return AP_polY, AP_polX
