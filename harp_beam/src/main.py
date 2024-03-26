@@ -1,3 +1,4 @@
+import os
 import configparser
 import numpy as np
 from utils import compute_k0, load_antenna_data, load_arrays_from_mat
@@ -18,9 +19,14 @@ max_iteration = config.getint('PARAMETERS', 'max_iteration')
 threshold = config.getfloat('PARAMETERS', 'threshold')
 antenna_name = config.get('ANTENNA', 'antenna_name')
 array_layout = config.get('ANTENNA', 'array_layout')
+
+# Data path
+data_path = config.get('PATHS', 'data_path')
+
+# filenames
 filename_eep_pattern = config['PATHS']['filename_eep']
-filename_eep = filename_eep_pattern % (antenna_name, array_layout, freq)
-filename_vismat = config.get('PATHS', 'filename_vismat')
+filename_eep = os.path.join(data_path, filename_eep_pattern % (antenna_name, array_layout, freq))
+filename_vismat = os.path.join(data_path, config.get('PATHS', 'filename_vismat'))
 
 # computed variables
 k0 = compute_k0(freq, c0)
@@ -43,8 +49,8 @@ theta0 = 0
 phi0 = 0
 phi_min = -np.pi
 phi_max = np.pi
-theta0_steering = np.radians(80)
-phi0_steering = np.radians(40)
+theta0_steering = np.radians(40)
+phi0_steering = np.radians(80)
 
 
 def main():
@@ -94,13 +100,13 @@ def main():
     G_AEP = G_AEP1.diagonal().reshape(-1,1)
 
     # Array pattern for Gain Solutions
-    AP_sol_polY, AP_sol_polX = compute_beamforming(g_sol, *complex_E_fields, pos_ant, theta, phi_q5, theta0, phi0)
+    AP_sol_polY, AP_sol_polX = compute_beamforming(g_sol, *complex_E_fields, pos_ant, theta, phi, theta0, phi0)
     
     # Array pattern for EEPs from Algorithm 1
-    AP_G_EEPs_polY, AP_G_EEPs_polX = compute_beamforming(G_EEPs, *complex_E_fields, pos_ant, theta, phi_q5, theta0, phi0)
+    AP_G_EEPs_polY, AP_G_EEPs_polX = compute_beamforming(G_EEPs, *complex_E_fields, pos_ant, theta, phi, theta0, phi0)
 
     # Array pattern for AEP from Algorithm 1
-    AP_G_AEP_polY, AP_G_AEP_polX = compute_beamforming(G_AEP, *complex_E_fields, pos_ant, theta, phi_q5, theta0, phi0)
+    AP_G_AEP_polY, AP_G_AEP_polX = compute_beamforming(G_AEP, *complex_E_fields, pos_ant, theta, phi, theta0, phi0)
 
     # Plot beamforming results
     plot_beamforming_results(theta, [AP_sol_polY, AP_G_EEPs_polY, AP_G_AEP_polY],
@@ -112,7 +118,7 @@ def main():
     ## Q6. Calibrated station beam in sine-cosine space
     # Initialise grid for theta and phi
     theta = np.linspace(theta_min, theta_max, num_dir)
-    phi = np.linspace(-np.pi, np.pi, num=256) 
+    phi = np.linspace(-np.pi, np.pi, num_dir) 
     theta_grid, phi_grid = np.meshgrid(theta, phi, indexing='ij') 
 
     # Use most accurate gain values (EEPs StEFCal Algorithm 1)
