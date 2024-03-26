@@ -1,7 +1,7 @@
 import configparser
 import numpy as np
-from harp_beam import compute_EEPs, power_EEPs, stefcal, compute_beamforming
 from utils import compute_k0, load_antenna_data, load_arrays_from_mat
+from harp_beam import compute_EEPs, power_EEPs, stefcal, compute_beamforming
 from plot_utils import plot_power_EEPs_and_AEP, plot_stefcal_comparison, plot_beamforming_results, plot_station_beam_pattern
 
 # initialise the config parser
@@ -46,13 +46,13 @@ phi_max = np.pi
 theta0_steering = np.radians(80)
 phi0_steering = np.radians(40)
 
-# computed parameters
-theta = np.linspace(theta_min, theta_max, num_dir)
-phi = np.zeros_like(theta)
-
 
 def main():
     ## Q2. Compute the EEPs and AEPs for the given antenna data and parameters
+    # theta and phi values
+    theta = np.linspace(theta_min, theta_max, num_dir)
+    phi = np.zeros_like(theta)
+
     # Compute EEPs
     complex_E_fields = compute_EEPs(theta.copy()[:, None], 
                                     phi.copy()[:, None], 
@@ -85,8 +85,9 @@ def main():
 
 
     ## Q5. Calibrating EEP using Array Pattern
-    # to zenith
-    phi_q5 = 0
+    # theta values and phi to zenith
+    theta = np.linspace(theta_min, theta_max, num_dir)
+    phi = 0
 
     # Use gain values with the lowest error (StEFCal Algorithm 1)
     G_EEPs = G_EEPs1.diagonal().reshape(-1,1)
@@ -110,15 +111,15 @@ def main():
 
     ## Q6. Calibrated station beam in sine-cosine space
     # Initialise grid for theta and phi
-    theta_vals = np.linspace(-np.pi/2, np.pi/2, num=256)
-    phi_vals = np.linspace(-np.pi, np.pi, num=256) 
-    theta_grid, phi_grid = np.meshgrid(theta_vals, phi_vals, indexing='ij') 
+    theta = np.linspace(theta_min, theta_max, num_dir)
+    phi = np.linspace(-np.pi, np.pi, num=256) 
+    theta_grid, phi_grid = np.meshgrid(theta, phi, indexing='ij') 
 
     # Use most accurate gain values (EEPs StEFCal Algorithm 1)
     G = G_EEPs1.diagonal().reshape(-1, 1)
 
     # Compute the beamforming
-    AP_ploY, AP_polX = compute_beamforming(G, *complex_E_fields, pos_ant, theta_vals, phi_vals, theta0_steering, phi0_steering)
+    AP_ploY, AP_polX = compute_beamforming(G, *complex_E_fields, pos_ant, theta, phi, theta0_steering, phi0_steering)
 
     # Map theta and phi to sine-cosine coordinates
     x = np.sin(theta_grid) * np.cos(phi_grid)

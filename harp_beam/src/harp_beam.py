@@ -116,27 +116,11 @@ def compute_EEPs(theta, phi, alpha_te, alpha_tm, coeffs_polX, coeffs_polY, pos_a
     ind = theta < 0
     theta[ind] = -theta[ind]
     phi[ind] = wrapTo2Pi(phi[ind] + np.pi)
-    '''
-    freq = 100
-    c0 = 299792458  # speed of light
-    k0 = 2 * np.pi * freq / c0 * 10**6  # wavenumber
-    antenna = 'SKALA41'  # antenna name
-    layout = 'random'  # array layout
-    data_folder = 'harp_beam'
-    filename_eep = f"data_EEPs_{antenna}_{layout}_{freq}MHz.mat"
-    mat = scipy.io.loadmat(filename_eep)
 
-    max_order = int(mat['max_order'])
-    num_mbf = int(mat['num_mbf'])
-    coeffs_polX = np.array(mat['coeffs_polX'])
-    coeffs_polY = np.array(mat['coeffs_polY'])
-    alpha_te = np.array(mat['alpha_te'])
-    alpha_tm = np.array(mat['alpha_tm'])
-    pos_ant = np.array(mat['pos_ant'])
-    '''
-    
+    # unpack postions
     x_pos = pos_ant[:,0]
     y_pos = pos_ant[:,1]
+
     # reshaping
     alpha_te = np.ndarray.transpose(np.reshape(alpha_te, (num_mbf, 2 * max_order + 1, max_order), order='F'), (0, 2, 1))
     alpha_tm = np.ndarray.transpose(np.reshape(alpha_tm, (num_mbf, 2 * max_order + 1, max_order), order='F'), (0, 2, 1))
@@ -295,6 +279,7 @@ def beamforming(G_diag, EEP, pos_ant, theta, phi, theta0, phi0):
 
     return pattern
 
+# Q5 Compute beamforming
 def compute_beamforming(G, v_theta_polY, v_phi_polY, v_theta_polX, v_phi_polX, pos_ant, theta, phi, theta0, phi0):
     
     AP_theta_polY = np.abs(beamforming(G, v_theta_polY, pos_ant, theta, phi, theta0, phi0))
