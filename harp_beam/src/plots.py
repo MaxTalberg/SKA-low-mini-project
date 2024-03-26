@@ -198,9 +198,9 @@ def plot_beamforming_results(theta_range, polY_data, polX_data, labels, linestyl
     plt.figure(figsize=(12, 5))
     for data, label, linestyle in zip(polY_data, labels, linestyles):
         plt.plot(np.rad2deg(theta_range), data, label=label, linestyle=linestyle)
-    plt.title('Station Beam, polY, Y-plane, freq = 100MHz')
+    plt.title('Station Beam, polY, Y feed, freq = 100MHz')
     plt.xlabel('Theta (degrees)')
-    plt.ylabel('Pattern Magnitude (dBV)')
+    plt.ylabel('E-field (dBV)')
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
@@ -210,15 +210,15 @@ def plot_beamforming_results(theta_range, polY_data, polX_data, labels, linestyl
     plt.figure(figsize=(12, 5))
     for data, label, linestyle in zip(polX_data, labels, linestyles):
         plt.plot(np.rad2deg(theta_range), data, label=label, linestyle=linestyle)
-    plt.title('Station Beam, polX, X-plane, freq = 100MHz')
+    plt.title('Station Beam, polX, X feed, freq = 100MHz')
     plt.xlabel('Theta (degrees)')
-    plt.ylabel('Pattern Magnitude (dBV)')
+    plt.ylabel('E-field (dBV)')
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
     plt.show()
 
-def plot_station_beam_pattern(x, y, AP, title="Calibrated Station Beam Pattern", xlabel=r'$\sin(\theta)\cos(\phi)$', ylabel=r'$\sin(\theta)\sin(\phi)$', intensity_label='Intensity [dBV]', cmap='viridis'):
+def plot_station_beam_pattern(x, y, APy, APx, xlabel=r'$\sin(\theta)\cos(\phi)$', ylabel=r'$\sin(\theta)\sin(\phi)$', intensity_label='Intensity [dBV]', cmap='viridis'):
     """
     Plots the station beam pattern using pcolormesh.
 
@@ -232,13 +232,25 @@ def plot_station_beam_pattern(x, y, AP, title="Calibrated Station Beam Pattern",
     - intensity_label: (Optional) Label for the colorbar.
     - cmap: (Optional) Colormap for the pcolormesh.
     """
-    plt.figure(figsize=(10, 8))
-    mesh = plt.pcolormesh(x, y, AP, shading='auto', cmap=cmap)
-    plt.colorbar(mesh, label=intensity_label)
+    plt.figure(figsize=(12, 5))
+
+    plt.subplot(1, 2, 1)
+    mesh = plt.pcolormesh(x, y, APy, cmap=cmap)
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
-    plt.title(title)
-    plt.xlim(-1, 1)
-    plt.ylim(-1, 1)
+    plt.title('Station Beam, polY, Y feed, freq=100MHz')
+    plt.xlim(-1.1, 1.1)
+    plt.ylim(-1.1, 1.1)
     plt.grid(True)
+    plt.colorbar(mesh)
+    
+    plt.subplot(1, 2, 2)
+    mesh = plt.pcolormesh(x, y, APx, cmap=cmap)
+    plt.xlabel(xlabel)
+    plt.title('Station Beam, polX, X feed, freq=100MHz')
+    plt.xlim(-1.1, 1.1)
+    plt.ylim(-1.1, 1.1)
+    plt.grid(True)
+    plt.colorbar(mesh, label=intensity_label)
+    plt.tight_layout()
     plt.show()
