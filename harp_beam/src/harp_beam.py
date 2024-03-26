@@ -261,7 +261,7 @@ def beamforming(G_diag, EEP, pos_ant, theta, phi, theta0, phi0):
 
     # Compute the weights for the steering direction
     weights = np.exp(1j * k * (np.sin(theta0) * np.cos(phi0) * pos_ant[:, 0] +
-                               np.sin(theta0) * np.sin(phi0) * pos_ant[:, 1]))
+                               np.sin(theta0) * np.sin(phi0) * pos_ant[:, 1])).reshape(-1, 1)
 
     # Check if phi is a scalar or an array
     if np.isscalar(phi):
@@ -269,8 +269,8 @@ def beamforming(G_diag, EEP, pos_ant, theta, phi, theta0, phi0):
         pattern = np.zeros_like(theta, dtype=np.complex64)
         for i, theta_val in enumerate(theta):
             phase_factor = np.exp(-1j * k * (np.sin(theta_val) * np.cos(phi) * pos_ant[:, 0] +
-                                             np.sin(theta_val) * np.sin(phi) * pos_ant[:, 1]))
-            array_factor = np.sum(weights * G_diag * EEP * phase_factor)
+                                             np.sin(theta_val) * np.sin(phi) * pos_ant[:, 1])).reshape(-1, 1)
+            array_factor = np.sum(weights * G_diag * EEP[i,:] * phase_factor)
             pattern[i] = array_factor
     else:
         # Phi is an array, proceed with the full computation
@@ -278,8 +278,8 @@ def beamforming(G_diag, EEP, pos_ant, theta, phi, theta0, phi0):
         for i, theta_val in enumerate(theta):
             for j, phi_val in enumerate(phi):
                 phase_factor = np.exp(-1j * k * (np.sin(theta_val) * np.cos(phi_val) * pos_ant[:, 0] +
-                                                 np.sin(theta_val) * np.sin(phi_val) * pos_ant[:, 1]))
-                array_factor = np.sum(weights * G_diag * EEP * phase_factor)
+                                                 np.sin(theta_val) * np.sin(phi_val) * pos_ant[:, 1])).reshape(-1, 1)
+                array_factor = np.sum(weights * G_diag * EEP[i,:] * phase_factor)
                 pattern[i, j] = array_factor
 
     return pattern

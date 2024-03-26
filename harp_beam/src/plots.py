@@ -180,7 +180,7 @@ def plot_stefcal_comparison(algo1_AEP, algo1_EEPs, algo2_AEP, algo2_EEPs):
     plt.tight_layout()
     plt.show()
 
-def plot_beamforming_results(theta_range, polY_data, polX_data, labels):
+def plot_beamforming_results(theta_range, polY_data, polX_data, labels, linestyles):
     """
     Plots beamforming results for polY and polX as separate figures.
 
@@ -196,8 +196,8 @@ def plot_beamforming_results(theta_range, polY_data, polX_data, labels):
 
     # Plot polY data in its own figure
     plt.figure(figsize=(12, 5))
-    for data, label in zip(polY_data, labels):
-        plt.plot(np.rad2deg(theta_range), data, label=label)
+    for data, label, linestyle in zip(polY_data, labels, linestyles):
+        plt.plot(np.rad2deg(theta_range), data, label=label, linestyle=linestyle)
     plt.title('Station Beam, polY, Y-plane, freq = 100MHz')
     plt.xlabel('Theta (degrees)')
     plt.ylabel('Pattern Magnitude (dBV)')
@@ -208,8 +208,8 @@ def plot_beamforming_results(theta_range, polY_data, polX_data, labels):
 
     # Plot polX data in its own figure
     plt.figure(figsize=(12, 5))
-    for data, label in zip(polX_data, labels):
-        plt.plot(np.rad2deg(theta_range), data, label=label)
+    for data, label, linestyle in zip(polX_data, labels, linestyles):
+        plt.plot(np.rad2deg(theta_range), data, label=label, linestyle=linestyle)
     plt.title('Station Beam, polX, X-plane, freq = 100MHz')
     plt.xlabel('Theta (degrees)')
     plt.ylabel('Pattern Magnitude (dBV)')
