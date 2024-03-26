@@ -5,8 +5,8 @@
 # Q. Gueuning (qdg20@cam.ac.uk) and O. O'Hara
 # see license file attached
 
+from tqdm import tqdm
 import numpy as np
-import scipy.io
 from scipy.special import lpmv, factorial
 
 def legendre(deg, x):
@@ -217,41 +217,51 @@ def power_EEPs(v_theta_polY, v_phi_polY, v_theta_polX, v_phi_polX):
     return EEPs_polY_dBV, EEPs_polX_dBV, AEP_polY_dBV, AEP_polX_dBV
 
 # Q3/4 StEFCal algorithm
-def stefcal(M, R, g_sol, max_iteration=1000, threshold=1e-6):
-    abs_error = []
-    amp_error = []
-    phase_error = []
+def stefcal(M, R, g_sol, max_iteration=1000, threshold=1e-5, algorithm2=False):
+    convergence = []
+    abs_gain_error = []
+    abs_amp_error = []
+    abs_phase_error = []
+
     # Number of antennas
+    N = R.shape[0]
+
     # Initial gain matrix G
-    G = np.eye(M.shape[0], dtype=complex) # Identity matrix
+    G = np.eye(N, dtype=complex) # Identity matrix
 
     # Iterative loop
-    for i in range(max_iteration):
+    for i in tqdm(range(max_iteration)):
+
         # Last iteration of G for comparison
         G_prev = G.copy()
 
-        for p in range(G.shape[0]):  # Loop over antennas p
-            z = np.dot(G_prev, M[:, p])  # Use all rows of M for antenna p
+        for p in range(N):  # Loop over antennas p
+            if algorithm2:
+                z = np.dot(G, M[:, p])  # Use G[i]
+            else:
+                z = np.dot(G_prev, M[:, p])  # Use G[i-1]
             gp = np.dot(np.conjugate(R[:, p]), z) / np.dot(np.conjugate(z), z)  # Calculate new gain for antenna p
-            G[p, p] = gp  # Update the gain for antenna p in the matrix
+            G[p, p] = gp # Update the gain for antenna p in the matrix
 
 
         # Convergence check even iterations
         if i % 2 == 0:
             
             delta_G = np.linalg.norm(G - G_prev, 'fro') / np.linalg.norm(G, 'fro')
+            convergence.append(delta_G)
             if delta_G < threshold:
                 print(f"Convergence reached after {i+1} iterations.")
                 break
             else:
                 G = (G + G_prev) / 2
+                
                 # Calculate errors
                 G_diagonal = G.diagonal().reshape(-1, 1)
-                abs_error.append(np.linalg.norm(np.abs(G_diagonal - g_sol), 'fro') / np.linalg.norm(g_sol, 'fro'))
-                amp_error.append(np.linalg.norm(np.abs(G_diagonal) - np.abs(g_sol), 'fro') / np.linalg.norm(g_sol, 'fro'))
-                phase_error.append(np.linalg.norm(np.angle(G_diagonal) - np.angle(g_sol), 'fro')/ np.linalg.norm(g_sol, 'fro'))
+                abs_gain_error.append(np.linalg.norm(np.abs(G_diagonal - g_sol), 'fro') / np.linalg.norm(g_sol, 'fro'))
+                abs_amp_error.append(np.linalg.norm(np.abs(G_diagonal) - np.abs(g_sol), 'fro') / np.linalg.norm(g_sol, 'fro'))
+                abs_phase_error.append(np.linalg.norm(np.angle(G_diagonal) - np.angle(g_sol), 'fro')/ np.linalg.norm(g_sol, 'fro'))
 
-    return G, abs_error, amp_error, phase_error
+    return G, convergence, abs_gain_error, abs_amp_error, abs_phase_error
 
 #Q5 Beamforming
 def beamforming(G_diag, EEP, pos_ant, theta, phi, theta0, phi0):
