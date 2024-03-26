@@ -111,12 +111,12 @@ def smodes_eval(order, alpha_tm, alpha_te, theta, phi):
 def wrapTo2Pi(phi):
     return phi % (2 * np.pi)
 
-def compute_EEPs(theta, phi):
+def compute_EEPs(theta, phi, alpha_te, alpha_tm, coeffs_polX, coeffs_polY, pos_ant, num_mbf, max_order, k0):
 
     ind = theta < 0
     theta[ind] = -theta[ind]
     phi[ind] = wrapTo2Pi(phi[ind] + np.pi)
-
+    '''
     freq = 100
     c0 = 299792458  # speed of light
     k0 = 2 * np.pi * freq / c0 * 10**6  # wavenumber
@@ -133,9 +133,10 @@ def compute_EEPs(theta, phi):
     alpha_te = np.array(mat['alpha_te'])
     alpha_tm = np.array(mat['alpha_tm'])
     pos_ant = np.array(mat['pos_ant'])
+    '''
+    
     x_pos = pos_ant[:,0]
     y_pos = pos_ant[:,1]
-
     # reshaping
     alpha_te = np.ndarray.transpose(np.reshape(alpha_te, (num_mbf, 2 * max_order + 1, max_order), order='F'), (0, 2, 1))
     alpha_tm = np.ndarray.transpose(np.reshape(alpha_tm, (num_mbf, 2 * max_order + 1, max_order), order='F'), (0, 2, 1))

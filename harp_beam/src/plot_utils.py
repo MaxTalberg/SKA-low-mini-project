@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 
 # function to plot EEPs and AEPs from vector compoenents
-def plot2(theta, magnitude_EEP_polY, magnitude_EEP_polX, AEP_polY, AEP_polX):
+def plot_power_EEPs_and_AEP(theta, magnitude_EEP_polY, magnitude_EEP_polX, AEP_polY, AEP_polX):
     
     #plt.figure(figsize=(12, 10))
 
