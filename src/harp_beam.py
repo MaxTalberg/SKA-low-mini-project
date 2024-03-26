@@ -5,8 +5,8 @@
 # Q. Gueuning (qdg20@cam.ac.uk) and O. O'Hara
 # see license file attached
 
-from tqdm import tqdm
 import numpy as np
+from tqdm import tqdm
 from scipy.special import lpmv, factorial
 
 def legendre(deg, x):
