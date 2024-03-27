@@ -10,6 +10,32 @@ The repository contains a series of Python scripts that explore this calibration
 
 by **Max Talberg**
 
+## Running the script on Docker
+
+### Setting Up the Project
+
+1. **Clone the repository:**
+   - Clone the repository from GitLab:
+     ```bash
+     git clone git@gitlab.developers.cam.ac.uk:phy/data-intensive-science-mphil/A1_SKA_Assessment/mt942.git
+     ```
+
+2. **Build the Docker image:**
+
+   - Build image:
+     ```bash
+     docker build -t ska-project .
+     ```
+
+3. **Running the script:**
+
+   - Run the main script:
+     ```bash
+     docker run -v host_directory:/app/src/plots ska-project
+     ```
+        - Replace `host_directory` with the path to the directory where you want to save the plots, for example: `/path/to/plots` and all the images will be saved into a folder named `plots`, information acompanying will be in the terminal output.
+
+
 ## Running the script locally
 
 ### Setting Up the Project
@@ -37,30 +63,6 @@ by **Max Talberg**
      python src/main.py
      ```
     
-## Running the script on Docker
-
-### Setting Up the Project
-
-1. **Clone the repository:**
-   - Clone the repository from GitLab:
-     ```bash
-     git clone git@gitlab.developers.cam.ac.uk:phy/data-intensive-science-mphil/A1_SKA_Assessment/mt942.git
-     ```
-
-2. **Build the Docker image:**
-
-   - Build image:
-     ```bash
-     docker build -t ska-project .
-     ```
-
-3. **Running the script:**
-
-   - Run the main script:
-     ```bash
-     docker run -v host_directory:/app/src/plots ska-project
-     ```
-        - Replace `host_directory` with the path to the directory where you want to save the plots, for example: `/path/to/plots` and all the images will be saved into a folder named `plots`, information acompanying will be in the terminal output.
 
 ### Notes
 
