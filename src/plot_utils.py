@@ -1,3 +1,4 @@
+import warnings
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -57,6 +58,7 @@ def plot_power_EEPs_and_AEP(
     plt.grid(True)
 
     plt.tight_layout()
+    plt.savefig('./plots/plot_power_EEPs_and_AEP_polY.png')
     plt.show()
 
     # Plot EEPs for polX
@@ -83,73 +85,9 @@ def plot_power_EEPs_and_AEP(
     plt.grid(True)
 
     plt.tight_layout()
+    plt.savefig('./plots/plot_power_EEPs_and_AEP_polX.png')
     plt.show()
-
-
-def plot_stefcal(
-    abs_error_AEP,
-    amp_error_AEP,
-    phase_error_AEP,
-    abs_error_EEPs,
-    amp_error_EEPs,
-    phase_error_EEPs,
-):
-    """
-    Plots the absolute, amplitude, and phase errors for the calibration solutions
-    obtained from AEP and all EEPs.
-
-    Parameters
-    ----------
-    abs_error_AEP : list or np.ndarray
-        The sequence of absolute errors for the calibration solution using the
-        Average Electric Field Pattern (AEP).
-    amp_error_AEP : list or np.ndarray
-        The sequence of amplitude errors for the AEP-based calibration solution.
-    phase_error_AEP : list or np.ndarray
-        The sequence of phase errors for the AEP-based calibration solution.
-    abs_error_EEPs : list or np.ndarray
-        The sequence of absolute errors for the calibration solutions using all
-        Equivalent Electric Field Patterns (EEPs).
-    amp_error_EEPs : list or np.ndarray
-        The sequence of amplitude errors for the EEPs-based calibration solutions.
-    phase_error_EEPs : list or np.ndarray
-        The sequence of phase errors for the EEPs-based calibration solutions.
-
-    The function generates a series of plots in a single figure, each comparing the
-    specified type of error (absolute, amplitude or phase) for the
-    AEP and EEPs-based calibration solutions
-    over a sequence of iterations.
-    """
-    plt.figure(figsize=(14, 5))
-
-    plt.subplot(1, 3, 1)
-    plt.plot(abs_error_AEP, label="AEP")
-    plt.plot(abs_error_EEPs, label="EEPs")
-    plt.xlabel("Iteration")
-    plt.ylabel("Error")
-    plt.title("Absolute Error")
-    plt.legend()
-
-    plt.subplot(1, 3, 2)
-    plt.plot(amp_error_AEP, label="AEP")
-    plt.plot(amp_error_EEPs, label="EEPs")
-    plt.xlabel("Iteration")
-    plt.ylabel("Error")
-    plt.title("Amplitude Error")
-    plt.legend()
-
-    plt.subplot(1, 3, 3)
-    plt.plot(phase_error_AEP, label="AEP")
-    plt.plot(phase_error_EEPs, label="EEPs")
-    plt.xlabel("Iteration")
-    plt.ylabel("Error")
-    plt.title("Phase Error")
-    plt.legend()
-
-    plt.tight_layout()
-    plt.show()
-
-
+    
 def plot_stefcal_comparison(algo1_AEP, algo1_EEPs, algo2_AEP, algo2_EEPs):
     """
     Compares and visualises the convergence and error metrics for
@@ -226,8 +164,9 @@ def plot_stefcal_comparison(algo1_AEP, algo1_EEPs, algo2_AEP, algo2_EEPs):
     plt.legend()
 
     plt.tight_layout()
+    plt.savefig('./plots/plot_stefcal_convergence_comparison.png')
     plt.show()
-
+    
     # abs error
     plt.figure(figsize=(12, 5))
 
@@ -247,6 +186,7 @@ def plot_stefcal_comparison(algo1_AEP, algo1_EEPs, algo2_AEP, algo2_EEPs):
     plt.legend()
 
     plt.tight_layout()
+    plt.savefig('./plots/plot_stefcal_gain_comparison.png')
     plt.show()
 
     # amp error
@@ -266,7 +206,9 @@ def plot_stefcal_comparison(algo1_AEP, algo1_EEPs, algo2_AEP, algo2_EEPs):
     plt.xlabel("Iteration")
     plt.title("Algorithm 2,Absolute Amplitude Error")
     plt.legend()
+
     plt.tight_layout()
+    plt.savefig('./plots/plot_stefcal_amplitude_comparison.png')
     plt.show()
 
     # phase error
@@ -288,8 +230,8 @@ def plot_stefcal_comparison(algo1_AEP, algo1_EEPs, algo2_AEP, algo2_EEPs):
     plt.legend()
 
     plt.tight_layout()
+    plt.savefig('./plots/plot_stefcal_phase_comparison.png')
     plt.show()
-
 
 def plot_beamforming_results(theta_range, polY_data, polX_data, labels, linestyles):
     """
@@ -334,7 +276,9 @@ def plot_beamforming_results(theta_range, polY_data, polX_data, labels, linestyl
     plt.ylabel("E-field (dBV)")
     plt.legend()
     plt.grid(True)
+
     plt.tight_layout()
+    plt.savefig('./plots/plot_beamforming_polY.png')
     plt.show()
 
     # Plot polX data in its own figure
@@ -348,8 +292,8 @@ def plot_beamforming_results(theta_range, polY_data, polX_data, labels, linestyl
     plt.grid(True)
 
     plt.tight_layout()
+    plt.savefig('./plots/plot_beamforming_polX.png')
     plt.show()
-
 
 def plot_station_beam_pattern(
     x,
@@ -400,7 +344,9 @@ def plot_station_beam_pattern(
     plt.figure(figsize=(12, 5))
 
     plt.subplot(1, 2, 1)
-    mesh = plt.pcolormesh(x, y, APy, cmap=cmap)
+    with warnings.catch_warnings():
+        warnings.simplefilter('ignore', UserWarning)
+        mesh = plt.pcolormesh(x, y, APy, cmap=cmap)
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     plt.title("Station Beam, polY, Y feed, freq=100MHz")
@@ -410,7 +356,9 @@ def plot_station_beam_pattern(
     plt.colorbar(mesh)
 
     plt.subplot(1, 2, 2)
-    mesh = plt.pcolormesh(x, y, APx, cmap=cmap)
+    with warnings.catch_warnings():
+        warnings.simplefilter('ignore', UserWarning)
+        mesh = plt.pcolormesh(x, y, APx, cmap=cmap)
     plt.xlabel(xlabel)
     plt.title("Station Beam, polX, X feed, freq=100MHz")
     plt.xlim(-1.1, 1.1)
@@ -419,4 +367,5 @@ def plot_station_beam_pattern(
     plt.colorbar(mesh, label=intensity_label)
 
     plt.tight_layout()
+    plt.savefig('./plots/plot_station_beam_pattern.png')
     plt.show()
