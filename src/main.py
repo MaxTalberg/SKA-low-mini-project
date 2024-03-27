@@ -10,6 +10,9 @@ from plot_utils import (
     plot_station_beam_pattern,
 )
 
+# Change the working directory to the location of this script
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
 # initialise the config parser
 config = configparser.ConfigParser()
 

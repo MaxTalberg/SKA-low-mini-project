@@ -3,8 +3,7 @@
 
 ## Introduction
 
-In the era of radio astronomy with initiatives like the Square Kilometer Array (SKA), the precision of instrument calibration is vital. This project focuses on implementing an algorithm for the retrieval of gain solutions for a single SKA-low station, which comprises 256
-antennas. 
+In the era of radio astronomy with initiatives like the Square Kilometer Array (SKA), the precision of instrument calibration is vital. This project focuses on implementing an algorithm for the retrieval of gain solutions for a single SKA-low station, which comprises 256 antennas. 
 
 The repository contains a series of Python scripts that explore this calibration problem. The following section provides instructions on how to run the `main.py` script.
 
