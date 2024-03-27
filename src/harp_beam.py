@@ -8,6 +8,7 @@
 import numpy as np
 from scipy.special import lpmv, factorial
 
+
 def legendre(deg, x):
     """
     Calculate the associated Legendre function for integer orders and degree at value x.
@@ -26,6 +27,7 @@ def legendre(deg, x):
     """
     return np.asarray([lpmv(i, deg, x) for i in range(deg + 1)])[:, 0, :]
 
+
 def legendre3(n, u):
     """
     Calculate all associated Legendre functions up to max order n at value x.
@@ -40,31 +42,38 @@ def legendre3(n, u):
     Returns
     -------
         return : np.array
-        Legendre functions (Pnm,Pnm/costheta,dPnmdsintheta) for all integer orders from 0 to deg.
+        Legendre functions (Pnm,Pnm/costheta,dPnmdsintheta) for all
+        integer orders from 0 to deg.
     """
     pn = legendre(n, u)
-    pnd = np.divide(pn, np.ones_like(n + 1) * np.sqrt(1 - u ** 2))
+    pnd = np.divide(pn, np.ones_like(n + 1) * np.sqrt(1 - u**2))
 
     mv = np.arange(n)
 
     dpns = np.zeros((n + 1, len(u[0])))
-    dpns[:-1, :] = np.multiply(-(mv[:, None]), np.divide(u, 1 - u ** 2)) * pn[mv, :] - pnd[mv + 1, :]
-    dpns[n, :] = np.multiply(-n, np.divide(u, 1 - u ** 2)) * pn[n, :];
-    dpns *= np.sqrt(1 - u ** 2)
+    dpns[:-1, :] = (
+        np.multiply(-(mv[:, None]), np.divide(u, 1 - u**2)) * pn[mv, :] - pnd[mv + 1, :]
+    )
+    dpns[n, :] = np.multiply(-n, np.divide(u, 1 - u**2)) * pn[n, :]
+    dpns *= np.sqrt(1 - u**2)
     return pn, pnd, dpns
+
 
 def smodes_eval(order, alpha_tm, alpha_te, theta, phi):
     """
-    Calculate spherical wave modes TE and TM according to definitions in the book J.E. Hansen, Spherical near-field measurements
+    Calculate spherical wave modes TE and TM according to definitions in
+    the book J.E. Hansen, Spherical near-field measurements
 
     Parameters
     ----------
     order : float
         Max order of the Legendre function.
     alpha_tm : np.array, complex double
-        coefficients for TM modes, 3d array of size (num_mbf, 2 * max_order + 1, max_order)
+        coefficients for TM modes, 3d array of size
+        (num_mbf, 2 * max_order + 1, max_order)
     alpha_te : np.array, complex double
-        coefficients for TE modes, 3d array of size (num_mbf, 2 * max_order + 1, max_order)
+        coefficients for TE modes, 3d array of size
+        (num_mbf, 2 * max_order + 1, max_order)
     theta : np.araay, float
         zenith angle
     phi : np.array, float
@@ -73,8 +82,8 @@ def smodes_eval(order, alpha_tm, alpha_te, theta, phi):
     Returns
     -------
         return : np.array, complex double
-        gvv 
-        ghh 
+        gvv
+        ghh
     """
     tol = 1e-5
     theta[theta < tol] = tol
@@ -92,7 +101,15 @@ def smodes_eval(order, alpha_tm, alpha_te, theta, phi):
         pmn = np.row_stack((np.flipud(pnd[1:]), pnd))
         dpmn = np.row_stack((np.flipud(dpns[1:]), dpns))
 
-        Nv = 2 * np.pi * n * (n + 1) / (2 * n + 1) * factorial(n + np.abs(mv)) / factorial(n - abs(mv))
+        Nv = (
+            2
+            * np.pi
+            * n
+            * (n + 1)
+            / (2 * n + 1)
+            * factorial(n + np.abs(mv))
+            / factorial(n - abs(mv))
+        )
         Nf = np.sqrt(2 * Nv)
         ee = EE[mv + order]
         qq = -ee * dpmn
@@ -108,6 +125,7 @@ def smodes_eval(order, alpha_tm, alpha_te, theta, phi):
 
     return gvv.T, ghh.T
 
+
 def wrapTo2Pi(phi):
     """
     Wraps the given angle phi to the range [0, 2*pi).
@@ -120,29 +138,47 @@ def wrapTo2Pi(phi):
     Returns
     -------
     wrapped_phi : float or np.ndarray
-        Angle(s) wrapped to the range [0, 2*pi). The returned value has the same type as the input `phi`.
+        Angle(s) wrapped to the range [0, 2*pi).
+        The returned value has the same type as the input `phi`.
     """
     return phi % (2 * np.pi)
 
-def compute_EEPs(theta, phi, alpha_te, alpha_tm, coeffs_polX, coeffs_polY, pos_ant, num_mbf, max_order, k0):
+
+def compute_EEPs(
+    theta,
+    phi,
+    alpha_te,
+    alpha_tm,
+    coeffs_polX,
+    coeffs_polY,
+    pos_ant,
+    num_mbf,
+    max_order,
+    k0,
+):
     """
-    Computes the Equivalent Electric Field Patterns (EEPs) for a given antenna array configuration,
-    considering both TE and TM modes.
+    Computes the Equivalent Electric Field Patterns (EEPs) for a
+    given antenna array configuration, considering both TE and TM modes.
 
     Parameters
     ----------
     theta : np.ndarray
-        Array of elevation angles in radians, where negative values are reflected and wrapped accordingly.
+        Array of elevation angles in radians, where negative values are
+        reflected and wrapped accordingly.
     phi : np.ndarray
-        Array of azimuth angles in radians, wrapped to the range [0, 2*pi) for negative theta.
+        Array of azimuth angles in radians, wrapped to the range [0, 2*pi)
+        for negative theta.
     alpha_te : np.ndarray
-        Coefficients for TE modes, reshaped according to 'num_mbf', 'max_order', and beam directions.
+        Coefficients for TE modes, reshaped according to
+        'num_mbf', 'max_order', and beam directions.
     alpha_tm : np.ndarray
         Coefficients for TM modes, similarly reshaped.
     coeffs_polX : np.ndarray
-        Coefficients for polarisation X, considering antenna positions and mode basis functions (MBFs).
+        Coefficients for polarisation X, considering antenna positions
+        and mode basis functions (MBFs).
     coeffs_polY : np.ndarray
-        Coefficients for polarisation Y, with a similar structure to 'coeffs_polX'.
+        Coefficients for polarisation Y, with a similar structure to
+        'coeffs_polX'.
     pos_ant : np.ndarray
         Positions of the antennas in the array.
     num_mbf : int
@@ -151,7 +187,7 @@ def compute_EEPs(theta, phi, alpha_te, alpha_tm, coeffs_polX, coeffs_polY, pos_a
         Maximum order of the modes.
     k0 : float
         Wave number in free space.
-    
+
     Returns
     -------
     v_theta_polY : np.ndarray
@@ -162,11 +198,12 @@ def compute_EEPs(theta, phi, alpha_te, alpha_tm, coeffs_polX, coeffs_polY, pos_a
         Vertical component of the electric field pattern for polarisation X.
     v_phi_polX : np.ndarray
         Horizontal component of the electric field pattern for polarisation X.
-    
+
     Notes
     -----
-    The function computes the EEPs by first correcting the input angles and then calculating the field components
-    using the provided mode coefficients, antenna positions, and the wave number. The output patterns are
+    The function computes the EEPs by first correcting the input angles and
+    then calculating the field components using the provided mode coefficients,
+    antenna positions, and the wave number. The output patterns are
     provided for each polarisation and direction.
     """
     ind = theta < 0
@@ -174,12 +211,18 @@ def compute_EEPs(theta, phi, alpha_te, alpha_tm, coeffs_polX, coeffs_polY, pos_a
     phi[ind] = wrapTo2Pi(phi[ind] + np.pi)
 
     # unpack postions
-    x_pos = pos_ant[:,0]
-    y_pos = pos_ant[:,1]
+    x_pos = pos_ant[:, 0]
+    y_pos = pos_ant[:, 1]
 
     # reshaping
-    alpha_te = np.ndarray.transpose(np.reshape(alpha_te, (num_mbf, 2 * max_order + 1, max_order), order='F'), (0, 2, 1))
-    alpha_tm = np.ndarray.transpose(np.reshape(alpha_tm, (num_mbf, 2 * max_order + 1, max_order), order='F'), (0, 2, 1))
+    alpha_te = np.ndarray.transpose(
+        np.reshape(alpha_te, (num_mbf, 2 * max_order + 1, max_order), order="F"),
+        (0, 2, 1),
+    )
+    alpha_tm = np.ndarray.transpose(
+        np.reshape(alpha_tm, (num_mbf, 2 * max_order + 1, max_order), order="F"),
+        (0, 2, 1),
+    )
 
     num_dir = len(theta)
     num_ant = len(pos_ant)
@@ -196,18 +239,22 @@ def compute_EEPs(theta, phi, alpha_te, alpha_tm, coeffs_polX, coeffs_polY, pos_a
     v_phi_polY = np.zeros((num_dir, num_beam), dtype=np.complex128)
     v_theta_polX = np.zeros((num_dir, num_beam), dtype=np.complex128)
     v_phi_polX = np.zeros((num_dir, num_beam), dtype=np.complex128)
-    phase_factor = np.exp(1j * k0 * (ux*x_pos + uy*y_pos))
+    phase_factor = np.exp(1j * k0 * (ux * x_pos + uy * y_pos))
     for i in range(num_mbf):
         p_thetai = v_mbf_theta[:, i]
         p_phii = v_mbf_phi[:, i]
 
-        c_polY = np.matmul(phase_factor,coeffs_polY[np.arange(num_ant) * num_mbf + i, :])
-        c_polX = np.matmul(phase_factor,coeffs_polX[np.arange(num_ant) * num_mbf + i, :])
+        c_polY = np.matmul(
+            phase_factor, coeffs_polY[np.arange(num_ant) * num_mbf + i, :]
+        )
+        c_polX = np.matmul(
+            phase_factor, coeffs_polX[np.arange(num_ant) * num_mbf + i, :]
+        )
 
-        v_theta_polY += p_thetai[:,None] * c_polY
-        v_phi_polY += p_phii[:,None] * c_polY
-        v_theta_polX += p_thetai[:,None] * c_polX
-        v_phi_polX += p_phii[:,None] * c_polX
+        v_theta_polY += p_thetai[:, None] * c_polY
+        v_phi_polY += p_phii[:, None] * c_polY
+        v_theta_polX += p_thetai[:, None] * c_polX
+        v_phi_polX += p_phii[:, None] * c_polX
 
     v_theta_polY *= np.conj(phase_factor)
     v_phi_polY *= np.conj(phase_factor)
@@ -216,27 +263,31 @@ def compute_EEPs(theta, phi, alpha_te, alpha_tm, coeffs_polX, coeffs_polY, pos_a
 
     return v_theta_polY, v_phi_polY, v_theta_polX, v_phi_polX
 
+
 def to_dBV(magnitude):
-    '''
+    """
     Convert a given magnitude to decibels relative to 1 volt (dBV).
-    
+
     Parameters
     ----------
     magnitude : float or np.ndarray
-        The magnitude (or array of magnitudes) of the signals whose level is to be converted to dBV.
-    
+        The magnitude (or array of magnitudes) of the signals whose level is to
+        be converted to dBV.
+
     Returns
     -------
     float or np.ndarray
         The level of the input magnitudes expressed in dBV.
-    '''
-    return 20*np.log10(magnitude)
+    """
+    return 20 * np.log10(magnitude)
+
 
 ## Q2
 def power_EEPs(v_theta_polY, v_phi_polY, v_theta_polX, v_phi_polX):
     """
-    Calculate the power Equivalent Electric Field Patterns (EEP) for two polarizations (X and Y),
-    and convert these patterns and their averages (AEPs) to dBV.
+    Calculate the power Equivalent Electric Field Patterns (EEP) for
+    two polarizations (X and Y) and convert these patterns and their
+    averages (AEPs) to dBV.
 
     Parameters
     ----------
@@ -262,9 +313,11 @@ def power_EEPs(v_theta_polY, v_phi_polY, v_theta_polX, v_phi_polX):
 
     Notes
     -----
-    The function calculates the magnitude of the EEPs for each component and polarisation, computes the total
-    EEPs by summing the squared magnitudes of the vertical and horizontal components, and calculates the
-    average EEPs (AEPs) across all directions. It then converts these values to dBV using the `to_dBV` function.
+    The function calculates the magnitude of the EEPs for each component
+    and polarisation, computes the total EEPs by summing the squared
+    magnitudes of the vertical and horizontal components and calculates
+    the average EEPs (AEPs) across all directions.
+    It then converts these values to dBV using the `to_dBV` function.
     """
     # Calculate magnitude of EEPs
     EEPs_theta_polY = np.abs(v_theta_polY)
@@ -288,44 +341,58 @@ def power_EEPs(v_theta_polY, v_phi_polY, v_theta_polX, v_phi_polX):
 
     return EEPs_polY_dBV, EEPs_polX_dBV, AEP_polY_dBV, AEP_polX_dBV
 
+
 ## Q3/4
 def stefcal(M, R, g_sol, max_iteration=1000, threshold=1e-5, algorithm2=False):
     """
-    Perform the StEFCal (Simplified Tikhonov-based Efficient Calibration) algorithm to solve for
-    the complex gain solutions of an antenna array in radio interferometry.
+    Perform the StEFCal (Simplified Tikhonov-based Efficient Calibration)
+    algorithm to solve for the complex gain solutions of an antenna array in
+    radio interferometry.
 
     Parameters
     ----------
     M : np.ndarray
-        The measured visibility matrix, representing the cross-correlations between antennas' signals.
+        The measured visibility matrix, representing the cross-correlations between
+        antennas' signals.
     R : np.ndarray
-        The model visibility matrix, derived from a known sky model and representing expected correlations.
+        The model visibility matrix, derived from a known sky model and representing
+        expected correlations.
     g_sol : np.ndarray
-        The true gain solutions for the antennas, used to compute errors for convergence analysis.
+        The true gain solutions for the antennas, used to compute errors for
+        convergence analysis.
     max_iteration : int, optional
-        The maximum number of iterations to run the algorithm for. Default is 1000.
+        The maximum number of iterations to run the algorithm for.
+        Default is 1000.
     threshold : float, optional
-        The convergence threshold, used to determine when the algorithm has sufficiently converged. Default is 1e-5.
+        The convergence threshold, used to determine when the algorithm has
+        sufficiently converged. Default is 1e-5.
     algorithm2 : bool, optional
-        Flag to determine which version of the algorithm to use. If False, uses G[i-1] for calculations; if True, uses G[i]. Default is False.
+        Flag to determine which version of the algorithm to use. If False, uses G[i-1]
+        for calculations; if True, uses G[i]. Default is False.
 
     Returns
     -------
     tuple:
         G : np.ndarray
-            The final estimated gains matrix, where each diagonal element represents the gain for one antenna.
+            The final estimated gains matrix, where each diagonal element represents the
+            gain for one antenna.
         convergence : list
-            A list of convergence values, one for every second iteration, measuring the relative change in G.
+            A list of convergence values, one for every second iteration, measuring the
+            relative change in G.
         abs_gain_error : list
-            A list of the absolute gain errors, measuring the difference between the estimated and true gains.
+            A list of the absolute gain errors, measuring the difference between the
+            estimated and true gains.
         abs_amp_error : list
-            A list of the absolute amplitude errors, comparing the magnitudes of the estimated and true gains.
+            A list of the absolute amplitude errors, comparing the magnitudes of the
+            estimated and true gains.
         abs_phase_error : list
-            A list of the absolute phase errors, comparing the phases of the estimated and true gains.
+            A list of the absolute phase errors, comparing the phases of the
+            estimated and true gains.
 
-    The function iteratively updates the gain solutions by minimising the difference between the measured
-    and model visibilities, adjusting the gains to better fit the model to the measurements. Convergence
-    is checked every second iteration, and various errors are calculated to evaluate the accuracy of the
+    The function iteratively updates the gain solutions by minimising the difference
+    between the measured and model visibilities, adjusting the gains to better fit the
+    model to the measurements. Convergence is checked every second iteration and various
+    errors are calculated to evaluate the accuracy of the
     gain estimates.
     """
     convergence = []
@@ -337,7 +404,7 @@ def stefcal(M, R, g_sol, max_iteration=1000, threshold=1e-5, algorithm2=False):
     N = R.shape[0]
 
     # Initial gain matrix G
-    G = np.eye(N, dtype=complex) # Identity matrix
+    G = np.eye(N, dtype=complex)  # Identity matrix
 
     # Iterative loop
     for i in range(max_iteration):
@@ -350,40 +417,54 @@ def stefcal(M, R, g_sol, max_iteration=1000, threshold=1e-5, algorithm2=False):
                 z = np.dot(G, M[:, p])  # Use G[i]
             else:
                 z = np.dot(G_prev, M[:, p])  # Use G[i-1]
-            gp = np.dot(np.conjugate(R[:, p]), z) / np.dot(np.conjugate(z), z)  # Calculate new gain for antenna p
-            G[p, p] = gp # Update the gain for antenna p in the matrix
-
+            gp = np.dot(np.conjugate(R[:, p]), z) / np.dot(
+                np.conjugate(z), z
+            )  # Calculate new gain for antenna p
+            G[p, p] = gp  # Update the gain for antenna p in the matrix
 
         # Convergence check even iterations
         if i % 2 == 0:
-            
-            delta_G = np.linalg.norm(G - G_prev, 'fro') / np.linalg.norm(G, 'fro')
+
+            delta_G = np.linalg.norm(G - G_prev, "fro") / np.linalg.norm(G, "fro")
             convergence.append(delta_G)
             if delta_G < threshold:
                 print(f"Convergence reached after {i+1} iterations.")
                 break
             else:
                 G = (G + G_prev) / 2
-                
+
                 # Calculate errors
                 G_diagonal = G.diagonal().reshape(-1, 1)
-                abs_gain_error.append(np.linalg.norm(np.abs(G_diagonal - g_sol), 'fro') / np.linalg.norm(g_sol, 'fro'))
-                abs_amp_error.append(np.linalg.norm(np.abs(G_diagonal) - np.abs(g_sol), 'fro') / np.linalg.norm(g_sol, 'fro'))
-                abs_phase_error.append(np.linalg.norm(np.angle(G_diagonal) - np.angle(g_sol), 'fro')/ np.linalg.norm(g_sol, 'fro'))
+                abs_gain_error.append(
+                    np.linalg.norm(np.abs(G_diagonal - g_sol), "fro")
+                    / np.linalg.norm(g_sol, "fro")
+                )
+                abs_amp_error.append(
+                    np.linalg.norm(np.abs(G_diagonal) - np.abs(g_sol), "fro")
+                    / np.linalg.norm(g_sol, "fro")
+                )
+                abs_phase_error.append(
+                    np.linalg.norm(np.angle(G_diagonal) - np.angle(g_sol), "fro")
+                    / np.linalg.norm(g_sol, "fro")
+                )
 
     return G, convergence, abs_gain_error, abs_amp_error, abs_phase_error
+
 
 ## Q5
 def beamforming(G_diag, EEP, pos_ant, k, theta, phi, theta0, phi0):
     """
-    Perform beamforming to compute the array pattern for a given steering direction (theta0, phi0).
+    Perform beamforming to compute the array pattern for a given steering direction
+    (theta0, phi0).
 
     Parameters
     ----------
     G_diag : np.ndarray
-        The diagonal elements of the gains matrix, representing the gain for each antenna.
+        The diagonal elements of the gains matrix, representing the gain for each
+        antenna.
     EEP : np.ndarray
-        The Equivalent Electric Field Pattern for the antennas in the array for a specific polarization.
+        The Equivalent Electric Field Pattern for the antennas in the array for a
+        specific polarization.
     pos_ant : np.ndarray
         The positions of the antennas in the array.
     k : float
@@ -391,7 +472,8 @@ def beamforming(G_diag, EEP, pos_ant, k, theta, phi, theta0, phi0):
     theta : np.ndarray
         The elevation angles for which the array pattern is computed.
     phi : float or np.ndarray
-        The azimuth angle(s) for which the array pattern is computed. Can be a scalar or an array.
+        The azimuth angle(s) for which the array pattern is computed.
+        Can be a scalar or an array.
     theta0 : float
         The elevation angle of the steering direction.
     phi0 : float
@@ -400,46 +482,81 @@ def beamforming(G_diag, EEP, pos_ant, k, theta, phi, theta0, phi0):
     Returns
     -------
     np.ndarray
-        The computed array pattern for the specified theta and phi. The array is 1D if phi is a scalar,
-        or 2D if phi is an array, corresponding to the meshgrid formed by theta and phi.
+        The computed array pattern for the specified theta and phi.
+        The array is 1D if phi is a scalar, or 2D if phi is an array,
+        corresponding to the meshgrid formed by theta and phi.
 
-    The function calculates the beamforming pattern by applying phase shifts to the EEPs based on the antenna positions
-    and the desired steering direction. It accounts for both scalar and array inputs for the azimuth angle phi.
+    The function calculates the beamforming pattern by applying phase shifts to
+    the EEPs based on the antenna positions and the desired steering direction.
+    It accounts for both scalar and array inputs for the azimuth angle phi.
     """
     # Compute the weights for the steering direction
-    weights = np.exp(1j * k * (np.sin(theta0) * np.cos(phi0) * pos_ant[:, 0] +
-                               np.sin(theta0) * np.sin(phi0) * pos_ant[:, 1])).reshape(-1, 1)
+    weights = np.exp(
+        1j
+        * k
+        * (
+            np.sin(theta0) * np.cos(phi0) * pos_ant[:, 0]
+            + np.sin(theta0) * np.sin(phi0) * pos_ant[:, 1]
+        )
+    ).reshape(-1, 1)
 
     # Check if phi is a scalar or an array
     if np.isscalar(phi):
         # Phi is a scalar, simplify the computation
         pattern = np.zeros_like(theta, dtype=np.complex64)
         for i, theta_val in enumerate(theta):
-            phase_factor = np.exp(-1j * k * (np.sin(theta_val) * np.cos(phi) * pos_ant[:, 0] +
-                                             np.sin(theta_val) * np.sin(phi) * pos_ant[:, 1])).reshape(-1, 1)
-            array_factor = np.sum(weights * G_diag * EEP[i,:] * phase_factor)
+            phase_factor = np.exp(
+                -1j
+                * k
+                * (
+                    np.sin(theta_val) * np.cos(phi) * pos_ant[:, 0]
+                    + np.sin(theta_val) * np.sin(phi) * pos_ant[:, 1]
+                )
+            ).reshape(-1, 1)
+            array_factor = np.sum(weights * G_diag * EEP[i, :] * phase_factor)
             pattern[i] = array_factor
     else:
         # Phi is an array, proceed with the full computation
         pattern = np.zeros((len(theta), len(phi)), dtype=np.complex64)
         for i, theta_val in enumerate(theta):
             for j, phi_val in enumerate(phi):
-                phase_factor = np.exp(-1j * k * (np.sin(theta_val) * np.cos(phi_val) * pos_ant[:, 0] +
-                                                 np.sin(theta_val) * np.sin(phi_val) * pos_ant[:, 1])).reshape(-1, 1)
-                array_factor = np.sum(weights * G_diag * EEP[i,:] * phase_factor)
+                phase_factor = np.exp(
+                    -1j
+                    * k
+                    * (
+                        np.sin(theta_val) * np.cos(phi_val) * pos_ant[:, 0]
+                        + np.sin(theta_val) * np.sin(phi_val) * pos_ant[:, 1]
+                    )
+                ).reshape(-1, 1)
+                array_factor = np.sum(weights * G_diag * EEP[i, :] * phase_factor)
                 pattern[i, j] = array_factor
 
     return pattern
 
-## Q5 
-def compute_beamforming(G, v_theta_polY, v_phi_polY, v_theta_polX, v_phi_polX, pos_ant, k, theta, phi, theta0, phi0):
+
+## Q5
+def compute_beamforming(
+    G,
+    v_theta_polY,
+    v_phi_polY,
+    v_theta_polX,
+    v_phi_polX,
+    pos_ant,
+    k,
+    theta,
+    phi,
+    theta0,
+    phi0,
+):
     """
-    Compute the beamforming patterns for both Y and X polarisations, and convert the results to dBV.
+    Compute the beamforming patterns for both Y and X polarisations
+    and convert the results to dBV.
 
     Parameters
     ----------
     G : np.ndarray
-        The gains matrix for the antennas in the array, with diagonal elements representing the gains per antenna.
+        The gains matrix for the antennas in the array, with diagonal elements
+        representing the gains per antenna.
     v_theta_polY : np.ndarray
         The vertical component of the electric field pattern for polarisation Y.
     v_phi_polY : np.ndarray
@@ -455,7 +572,8 @@ def compute_beamforming(G, v_theta_polY, v_phi_polY, v_theta_polX, v_phi_polX, p
     theta : np.ndarray
         The elevation angles for which the array pattern is computed.
     phi : float or np.ndarray
-        The azimuth angle(s) for which the array pattern is computed. Can be a scalar or an array.
+        The azimuth angle(s) for which the array pattern is computed.
+        Can be a scalar or an array.
     theta0 : float
         The elevation angle of the steering direction.
     phi0 : float
@@ -464,18 +582,28 @@ def compute_beamforming(G, v_theta_polY, v_phi_polY, v_theta_polX, v_phi_polX, p
     Returns
     -------
     tuple of np.ndarray
-        The computed array patterns for polarisations Y and X, converted to dBV. Each pattern is 1D if phi is a scalar,
-        or 2D if phi is an array, corresponding to the meshgrid formed by theta and phi.
+        The computed array patterns for polarisations Y and X, converted to dBV.
+        Each pattern is 1D if phi is a scalar, or 2D if phi is an array,
+        corresponding to the meshgrid formed by theta and phi.
 
-    This function utilises the `beamforming` function to calculate the array patterns for both Y and X polarisations
-    based on the provided EEPs and gains. It then computes the absolute patterns and converts them to dBV.
+    This function utilises the `beamforming` function to calculate the array patterns
+    for both Y and X polarisations based on the provided EEPs and gains.
+    It then computes the absolute patterns and converts them to dBV.
     """
-    AP_theta_polY = np.abs(beamforming(G, v_theta_polY, pos_ant, k, theta, phi, theta0, phi0))
-    AP_phi_polY = np.abs(beamforming(G, v_phi_polY, pos_ant, k, theta, phi, theta0, phi0))
+    AP_theta_polY = np.abs(
+        beamforming(G, v_theta_polY, pos_ant, k, theta, phi, theta0, phi0)
+    )
+    AP_phi_polY = np.abs(
+        beamforming(G, v_phi_polY, pos_ant, k, theta, phi, theta0, phi0)
+    )
     AP_polY = to_dBV(np.sqrt(AP_theta_polY**2 + AP_phi_polY**2))
 
-    AP_theta_polX = np.abs(beamforming(G, v_theta_polX, pos_ant, k, theta, phi, theta0, phi0))
-    AP_phi_polX = np.abs(beamforming(G, v_phi_polX, pos_ant, k, theta, phi, theta0, phi0))
+    AP_theta_polX = np.abs(
+        beamforming(G, v_theta_polX, pos_ant, k, theta, phi, theta0, phi0)
+    )
+    AP_phi_polX = np.abs(
+        beamforming(G, v_phi_polX, pos_ant, k, theta, phi, theta0, phi0)
+    )
     AP_polX = to_dBV(np.sqrt(AP_theta_polX**2 + AP_phi_polX**2))
 
     return AP_polY, AP_polX
