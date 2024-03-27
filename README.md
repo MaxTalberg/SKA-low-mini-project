@@ -40,13 +40,13 @@ by **Max Talberg**
 ### Notes
 
 - Running the provided script will produce a sequence of plots:
-    - The first two plots are part of the investigation into the most likely flash location analysis, addressing part (iii) of the problem.
+    - The first two depict the variability in the EEPs for each individual antenna element and the smoothed average response (2).
 
-    - The next four plots demonstrate the results of the NUTS for determining the lighthouse location based only on flash locations, corresponding to part (v). Results will be displayed in the terminal.
+    - The next four plots illsutrate the absolute error in gain, amplitdue and phase for two different model matricies $M_{EEPs}$ and $M_{AEP}$. These results are plotted for two versions of the StEFCal algorithm (3/4)
 
-    - The next set of four plots illustrates the NUTS results using both flash locations and intensities, corresponding to part (vii). Results will be displayed in the terminal.
+    - The next two plots illustrate the beamformed power patterns using the different gain solutions from the StEFCal algorithm.
 
-    - The final eight plots represent the appendix of the report. These plots are produced using ArviZ's and Corner's integrated plotting functions, they are accompanied by in-depth statistics in the terminal.
+    - The final two plots depcit a 3D plot in sine-cosine coordiantes of the beamformed power patterns using the most accurate calibrated gain solution.
 
 ## License
 
