@@ -62,33 +62,33 @@ def load_antenna_data(filename):
 
 def load_arrays_from_mat(filename):
     """
-    Loads specified arrays from a MATLAB .mat file, typically used 
-    in signal processing or antenna array simulations, 
+    Loads specified arrays from a MATLAB .mat file, typically used
+    in signal processing or antenna array simulations,
     into a Python dictionary for easy access.
 
     Parameters
     ----------
     filename : str
-        The path to the .mat file from which the data is to be loaded. 
-        This file is expected to contain specific matrices that represent 
-        various parameters or results from simulations or experimental setups 
+        The path to the .mat file from which the data is to be loaded.
+        This file is expected to contain specific matrices that represent
+        various parameters or results from simulations or experimental setups
         in the context of signal processing or antenna array analysis.
 
     Returns
     -------
     dict
         A dictionary containing the following key-value pairs:
-        - 'R': np.ndarray, the covariance matrix representing signal or 
+        - 'R': np.ndarray, the covariance matrix representing signal or
         noise correlations between array elements.
-        - 'M_AEP': np.ndarray, the model matrix derived using the 
+        - 'M_AEP': np.ndarray, the model matrix derived using the
         Average Electric Field Pattern (AEP).
-        - 'M_EEPs': np.ndarray, the model matrix derived using all 
+        - 'M_EEPs': np.ndarray, the model matrix derived using all
         Equivalent Electric Field Patterns (EEPs).
-        - 'g_sol': np.ndarray, the exact gain solution, typically used 
+        - 'g_sol': np.ndarray, the exact gain solution, typically used
         as a reference or true value.
-        - 'g_AEP': np.ndarray, the gain estimation derived from the 
+        - 'g_AEP': np.ndarray, the gain estimation derived from the
         'M_AEP' model matrix.
-        - 'g_EEPs': np.ndarray, the gain estimation derived from the 
+        - 'g_EEPs': np.ndarray, the gain estimation derived from the
         'M_EEPs' model matrix.
     """
     # Load the .mat file
