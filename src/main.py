@@ -54,6 +54,7 @@ phi0_steering = np.radians(80)
 
 
 def main():
+    
     ## Q2. Compute the EEPs and AEPs for the given antenna data and parameters
     # theta and phi values
     theta = np.linspace(theta_min, theta_max, num_dir)
@@ -79,11 +80,17 @@ def main():
 
     ## Q3/4. Implement stefcal and plot the errors
     # Run stefcal Algorithm 1
+    print('Running Stefcal Algorithm 1...')
+    print('AEP Stefcal Algorithm 1:')
     G_AEP1, *algo1_AEP = stefcal(M_AEP, R, g_sol, max_iteration, threshold, algorithm2=False)
+    print('EEPs Stefcal Algorithm 1:')
     G_EEPs1, *algo1_EEP = stefcal(M_EEPs, R, g_sol, max_iteration, threshold, algorithm2=False) 
 
     # Run stefcal Algorithm 2
+    print('Running Stefcal Algorithm 2...')
+    print('AEP Stefcal Algorithm 2:')
     G_AEP2, *algo2_AEP = stefcal(M_AEP, R, g_sol, max_iteration, threshold, algorithm2=True)
+    print('EEPs Stefcal Algorithm 2:')
     G_EEPs2, *algo2_EEP = stefcal(M_EEPs, R, g_sol, max_iteration, threshold, algorithm2=True)
 
     # plot stefcal
@@ -100,13 +107,13 @@ def main():
     G_AEP = G_AEP1.diagonal().reshape(-1,1)
 
     # Array pattern for Gain Solutions
-    AP_sol_polY, AP_sol_polX = compute_beamforming(g_sol, *complex_E_fields, pos_ant, theta, phi, theta0, phi0)
+    AP_sol_polY, AP_sol_polX = compute_beamforming(g_sol, *complex_E_fields, pos_ant, k0, theta, phi, theta0, phi0)
     
     # Array pattern for EEPs from Algorithm 1
-    AP_G_EEPs_polY, AP_G_EEPs_polX = compute_beamforming(G_EEPs, *complex_E_fields, pos_ant, theta, phi, theta0, phi0)
+    AP_G_EEPs_polY, AP_G_EEPs_polX = compute_beamforming(G_EEPs, *complex_E_fields, pos_ant, k0, theta, phi, theta0, phi0)
 
     # Array pattern for AEP from Algorithm 1
-    AP_G_AEP_polY, AP_G_AEP_polX = compute_beamforming(G_AEP, *complex_E_fields, pos_ant, theta, phi, theta0, phi0)
+    AP_G_AEP_polY, AP_G_AEP_polX = compute_beamforming(G_AEP, *complex_E_fields, pos_ant, k0, theta, phi, theta0, phi0)
 
     # Plot beamforming results
     plot_beamforming_results(theta, [AP_sol_polY, AP_G_EEPs_polY, AP_G_AEP_polY],
@@ -125,7 +132,7 @@ def main():
     G = G_EEPs1.diagonal().reshape(-1, 1)
 
     # Compute the beamforming
-    AP_ploY, AP_polX = compute_beamforming(G, *complex_E_fields, pos_ant, theta, phi, theta0_steering, phi0_steering)
+    AP_ploY, AP_polX = compute_beamforming(G, *complex_E_fields, pos_ant, k0, theta, phi, theta0_steering, phi0_steering)
 
     # Map theta and phi to sine-cosine coordinates
     x = np.sin(theta_grid) * np.cos(phi_grid)
