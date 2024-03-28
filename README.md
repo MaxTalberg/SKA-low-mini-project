@@ -91,6 +91,9 @@ by **Max Talberg**
        pytest
      ```
     
+## Documentation
+This project is documented using NumPy docstrings which is compatible with auto-documentation tools.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
