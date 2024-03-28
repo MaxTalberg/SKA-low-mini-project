@@ -285,7 +285,7 @@ def to_dBV(magnitude):
 ## Q2
 def power_EEPs(v_theta_polY, v_phi_polY, v_theta_polX, v_phi_polX):
     """
-    Calculate the power Equivalent Electric Field Patterns (EEP) for
+    Calculate the power Embedding Element Patterns (EEP) for
     two polarizations (X and Y) and convert these patterns and their
     averages (AEPs) to dBV.
 
