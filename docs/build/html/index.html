@@ -534,29 +534,36 @@ used to differentiate the plotted lines.</p></li>
 <dl class="py function">
 <dt class="sig sig-object py" id="src.plot_utils.plot_station_beam_pattern">
 <span class="sig-prename descclassname"><span class="pre">src.plot_utils.</span></span><span class="sig-name descname"><span class="pre">plot_station_beam_pattern</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">APy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">APx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'$\\sin(\\theta)\\cos(\\phi)$'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'$\\sin(\\theta)\\sin(\\phi)$'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensity_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Intensity</span> <span class="pre">[dBV]'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'viridis'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.plot_utils.plot_station_beam_pattern" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plots the beamforming results for both Y and X polarisations over a
-specified range of theta values.</p>
+<dd><p>Plots the station beam patterns for Y and X polarisations using color-mapped
+intensity data over a 2D spatial grid.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>theta_range</strong> (<em>np.ndarray</em>) – The range of theta values (in radians) over which the beamforming data is
-plotted. These values typically span from -pi/2 to pi/2 to cover the full
-angular span in the elevation plane.</p></li>
-<li><p><strong>polY_data</strong> (<em>list of np.ndarray</em>) – A list containing the data arrays for Y polarisation. Each array corresponds
-to a different beamforming result or condition to be plotted.</p></li>
-<li><p><strong>polX_data</strong> (<em>list of np.ndarray</em>) – A list containing the data arrays for X polarisation, structured similarly to
-<cite>polY_data</cite>.</p></li>
-<li><p><strong>labels</strong> (<em>list of str</em>) – A list of labels corresponding to each data array in <cite>polY_data</cite> and
-<cite>polX_data</cite>, used for the plot legend.</p></li>
-<li><p><strong>linestyles</strong> (<em>list of str</em>) – A list of matplotlib linestyles corresponding to each data array,
-used to differentiate the plotted lines.</p></li>
+<li><p><strong>x</strong> (<em>np.ndarray</em>) – 2D array of X-coordinates for the meshgrid over which the station beam patterns
+are plotted. Typically represents the sine of the elevation angle multiplied
+by the cosine of the azimuth angle.</p></li>
+<li><p><strong>y</strong> (<em>np.ndarray</em>) – 2D array of Y-coordinates for the meshgrid, corresponding to <cite>x</cite>.
+Typically represents the sine of the elevation
+angle multiplied by the sine of the azimuth angle.</p></li>
+<li><p><strong>APy</strong> (<em>np.ndarray</em>) – The antenna pattern data for Y polarisation to be visualised,
+mapped onto the meshgrid defined by <cite>x</cite> and <cite>y</cite>.</p></li>
+<li><p><strong>APx</strong> (<em>np.ndarray</em>) – The antenna pattern data for X polarisation, structured similarly to <cite>APy</cite>.</p></li>
+<li><p><strong>xlabel</strong> (<em>str</em><em>, </em><em>optional</em>) – Label for the x-axis of the plots. Defaults to representing the
+mathematical expression for <cite>x</cite>.</p></li>
+<li><p><strong>ylabel</strong> (<em>str</em><em>, </em><em>optional</em>) – Label for the y-axis of the plots. Defaults to representing the
+mathematical expression for <cite>y</cite>.</p></li>
+<li><p><strong>intensity_label</strong> (<em>str</em><em>, </em><em>optional</em>) – Label for the colorbar indicating the intensity scale.
+Defaults to ‘Intensity [dBV]’.</p></li>
+<li><p><strong>cmap</strong> (<em>str</em><em>, </em><em>optional</em>) – Colormap used for the pcolormesh plots. Defaults to ‘viridis’.</p></li>
+<li><p><strong>the</strong> (<em>This function creates two side-by-side color-mesh plots representing</em>) – </p></li>
+<li><p><strong>polarisations</strong> (<em>station beam patterns for Y and X</em>) – </p></li>
+<li><p><strong>respectively.</strong> – </p></li>
+<li><p><strong>specified</strong> (<em>The intensity of the beam patterns is color-coded according to the</em>) – </p></li>
+<li><p><strong>colormap</strong> – </p></li>
+<li><p><strong>scale.</strong> (<em>with a colorbar indicating the intensity</em>) – </p></li>
 </ul>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>The function generates two separate plots, one for Y polarisation and another for
-X polarisation. Each plot displays multiple beamforming results or conditions,
-differentiated by linestyles and annotated with a legend.</p>
 </dd></dl>
 
 </section>

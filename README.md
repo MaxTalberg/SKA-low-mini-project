@@ -92,7 +92,22 @@ by **Max Talberg**
      ```
     
 ## Documentation
-This project is documented using NumPy docstrings which is compatible with auto-documentation tools.
+
+### Generating Documentation
+1. **Navigate to the `docs` directory:**
+
+      ```bash
+       cd docs
+     ```
+2. **Generate the documentation:**
+
+      ```bash
+       make html
+     ```
+3. **Open the documentation:**
+
+      ```bash
+       open build/html/index.html
 
 ## License
 
