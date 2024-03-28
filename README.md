@@ -21,7 +21,10 @@ by **Max Talberg**
      ```
 
 2. **Build the Docker image:**
-
+    - Navigate to the project directory:
+      ```bash
+      cd mt942
+      ```
    - Build image:
      ```bash
      docker build -t ska-project .
@@ -47,7 +50,10 @@ by **Max Talberg**
      ```
 
 2. **Set up the virtual environment:**
-
+   - Navigate to the project directory:
+     ```bash
+       cd mt942
+       ```
    - Create virtual environment:
      ```bash
      conda env create -f environment.yml
@@ -81,4 +87,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Use of generative tools
 
-This project has utilised auto-generative tools in the development of documentation that is compatible with auto-documentation tools and the development of plotting functions.
+This project has utilised auto-generative tools in the development of documentation that is compatible with auto-documentation tools, latex formatting and the development of plotting functions. 
+
+Example prompts used for this project:
+- Generate doc-strings in NumPy format for this function.
+- Generate Latex code for a subplot.
+- Generate Latex code for a 3 by 3 matrix.
+- Generate Python code for a 2 by 1 subplot.

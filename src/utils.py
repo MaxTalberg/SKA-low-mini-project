@@ -51,6 +51,7 @@ def load_antenna_data(filename):
     """
     mat = scipy.io.loadmat(filename)
     max_order = int(mat["max_order"])
+    print(max_order)
     num_mbf = int(mat["num_mbf"])
     coeffs_polX = np.array(mat["coeffs_polX"])
     coeffs_polY = np.array(mat["coeffs_polY"])
