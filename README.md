@@ -81,6 +81,16 @@ by **Max Talberg**
 
     - The final two plots depcit a 3D plot in sine-cosine coordiantes of the beamformed power patterns using the most accurate calibrated gain solution (6).
 
+## Testing
+
+### Running Unit Tests
+
+1. **Navigate to the project directory `mt942 and run Unit Tests:**
+
+      ```bash
+       pytest
+     ```
+    
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
