@@ -34,7 +34,7 @@ by **Max Talberg**
 
    - Run the main script:
      ```bash
-     docker run -v host_directory:/app/src/plots ska-project
+     docker run -v host_directory:/app/plots ska-project
      ```
         - Replace `host_directory` with the path to the directory where you want to save the plots, for example: `/path/to/plots` and all the images will be saved into a folder named `plots`, information acompanying will be in the terminal output.
 
