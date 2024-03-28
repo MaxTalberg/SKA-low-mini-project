@@ -58,7 +58,7 @@ def plot_power_EEPs_and_AEP(
     plt.grid(True)
 
     plt.tight_layout()
-    plt.savefig('./plots/plot_power_EEPs_and_AEP_polY.png')
+    plt.savefig('../plots/plot_power_EEPs_and_AEP_polY.png')
     plt.show()
 
     # Plot EEPs for polX
@@ -85,7 +85,7 @@ def plot_power_EEPs_and_AEP(
     plt.grid(True)
 
     plt.tight_layout()
-    plt.savefig('./plots/plot_power_EEPs_and_AEP_polX.png')
+    plt.savefig('../plots/plot_power_EEPs_and_AEP_polX.png')
     plt.show()
     
 def plot_stefcal_comparison(algo1_AEP, algo1_EEPs, algo2_AEP, algo2_EEPs):
@@ -164,7 +164,7 @@ def plot_stefcal_comparison(algo1_AEP, algo1_EEPs, algo2_AEP, algo2_EEPs):
     plt.legend()
 
     plt.tight_layout()
-    plt.savefig('./plots/plot_stefcal_convergence_comparison.png')
+    plt.savefig('../plots/plot_stefcal_convergence_comparison.png')
     plt.show()
     
     # abs error
@@ -186,7 +186,7 @@ def plot_stefcal_comparison(algo1_AEP, algo1_EEPs, algo2_AEP, algo2_EEPs):
     plt.legend()
 
     plt.tight_layout()
-    plt.savefig('./plots/plot_stefcal_gain_comparison.png')
+    plt.savefig('../plots/plot_stefcal_gain_comparison.png')
     plt.show()
 
     # amp error
@@ -208,7 +208,7 @@ def plot_stefcal_comparison(algo1_AEP, algo1_EEPs, algo2_AEP, algo2_EEPs):
     plt.legend()
 
     plt.tight_layout()
-    plt.savefig('./plots/plot_stefcal_amplitude_comparison.png')
+    plt.savefig('../plots/plot_stefcal_amplitude_comparison.png')
     plt.show()
 
     # phase error
@@ -230,7 +230,7 @@ def plot_stefcal_comparison(algo1_AEP, algo1_EEPs, algo2_AEP, algo2_EEPs):
     plt.legend()
 
     plt.tight_layout()
-    plt.savefig('./plots/plot_stefcal_phase_comparison.png')
+    plt.savefig('../plots/plot_stefcal_phase_comparison.png')
     plt.show()
 
 def plot_beamforming_results(theta_range, polY_data, polX_data, labels, linestyles):
@@ -292,7 +292,7 @@ def plot_beamforming_results(theta_range, polY_data, polX_data, labels, linestyl
     plt.grid(True)
 
     plt.tight_layout()
-    plt.savefig('./plots/plot_beamforming_polX.png')
+    plt.savefig('../plots/plot_beamforming_polX.png')
     plt.show()
 
 def plot_station_beam_pattern(
@@ -367,5 +367,5 @@ def plot_station_beam_pattern(
     plt.colorbar(mesh, label=intensity_label)
 
     plt.tight_layout()
-    plt.savefig('./plots/plot_station_beam_pattern.png')
+    plt.savefig('../plots/plot_station_beam_pattern.png')
     plt.show()
