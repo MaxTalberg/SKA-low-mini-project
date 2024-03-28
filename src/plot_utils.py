@@ -278,7 +278,7 @@ def plot_beamforming_results(theta_range, polY_data, polX_data, labels, linestyl
     plt.grid(True)
 
     plt.tight_layout()
-    plt.savefig('./plots/plot_beamforming_polY.png')
+    plt.savefig('../plots/plot_beamforming_polY.png')
     plt.show()
 
     # Plot polX data in its own figure
